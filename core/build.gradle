@@ -1,0 +1,24 @@
+plugins {
+    id 'java'
+}
+
+group 'ru.clevertec'
+version '1.0'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    mavenLocal().setUrl("file:${rootProject.projectDir}/lib")
+}
+
+dependencies {
+    implementation 'ru.clevertec:utils:1.3.5'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+jar{
+    from configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+}
+test {
+    useJUnitPlatform()
+}
