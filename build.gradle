@@ -1,0 +1,55 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenLocal().setUrl("file:${rootProject.projectDir}/plugin")
+    }
+    dependencies { classpath 'ru.clevertec:myCustomPlugin:0.1' }
+}
+plugins {
+    id 'java'
+    id 'maven-publish'
+}
+java{
+    toolchain{
+        languageVersion = JavaLanguageVersion.of(8)
+    }
+}
+
+group 'ru.clevertec'
+version '1.3.5'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    implementation 'org.apache.commons:commons-lang3:3.10'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+jar{
+    manifest {
+        attributes('Implementation-Title': project.name,
+                'Implementation-Version':project.version)
+    }
+    from configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+}
+publishing{
+    publications{
+        mavenJava(MavenPublication){
+            from components.java
+            groupId = 'ru.clevertec'
+            artifactId = 'utils'
+            version = '1.3.5'
+
+        }
+    }
+}
+
+apply plugin: 'myCustomPlugin'
